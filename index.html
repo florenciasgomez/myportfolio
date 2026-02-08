@@ -1605,40 +1605,68 @@
 
             // Gather experience data from the DOM
             const experiences = [];
-            document.querySelectorAll('#experience .experience-item').forEach(item => {
-                const title = item.querySelector('h3').textContent;
-                const company = item.querySelector('.company').textContent;
-                const date = item.querySelector('.date').textContent;
-                const desc = item.querySelector('.experience-description').textContent.trim();
-                const techs = [];
-                item.querySelectorAll('.tech-tag').forEach(tag => techs.push(tag.textContent));
-                experiences.push({ title, company, date, desc, techs });
+            document.querySelectorAll('.experience-item').forEach(item => {
+                try {
+                    const title = item.querySelector('h3') ? item.querySelector('h3').textContent.trim() : '';
+                    const company = item.querySelector('.company') ? item.querySelector('.company').textContent.trim() : '';
+                    const date = item.querySelector('.date') ? item.querySelector('.date').textContent.trim() : '';
+                    const desc = item.querySelector('.experience-description') ? item.querySelector('.experience-description').textContent.trim() : '';
+                    const techs = [];
+                    item.querySelectorAll('.tech-tag').forEach(tag => techs.push(tag.textContent.trim()));
+                    if (title && company) {
+                        experiences.push({ title, company, date, desc, techs });
+                    }
+                } catch(e) {
+                    console.log('Error parsing experience item', e);
+                }
             });
 
             // Gather skills
             const skillGroups = [];
-            document.querySelectorAll('#skills .skill-category').forEach(cat => {
-                const category = cat.querySelector('.skill-category-title').textContent;
-                const skills = [];
-                cat.querySelectorAll('.skill-tag').forEach(s => skills.push(s.textContent));
-                skillGroups.push({ category, skills });
+            document.querySelectorAll('.skill-category').forEach(cat => {
+                try {
+                    const titleEl = cat.querySelector('.skill-category-title');
+                    const category = titleEl ? titleEl.textContent.trim() : '';
+                    const skills = [];
+                    cat.querySelectorAll('.skill-tag').forEach(s => skills.push(s.textContent.trim()));
+                    if (category && skills.length > 0) {
+                        skillGroups.push({ category, skills });
+                    }
+                } catch(e) {
+                    console.log('Error parsing skill category', e);
+                }
             });
 
             // Gather achievements
             const achievements = [];
-            document.querySelectorAll('#achievements .achievement-card').forEach(card => {
-                const title = card.querySelector('h3').textContent;
-                const desc = card.querySelector('p').textContent.trim();
-                achievements.push({ title, desc });
+            document.querySelectorAll('.achievement-card').forEach(card => {
+                try {
+                    const title = card.querySelector('h3') ? card.querySelector('h3').textContent.trim() : '';
+                    const desc = card.querySelector('p') ? card.querySelector('p').textContent.trim() : '';
+                    if (title && desc) {
+                        achievements.push({ title, desc });
+                    }
+                } catch(e) {
+                    console.log('Error parsing achievement card', e);
+                }
             });
 
             // Gather courses
             const courses = [];
-            document.querySelectorAll('#courses .course-item').forEach(item => {
-                const name = item.querySelector('.course-name').textContent;
-                const inst = item.querySelector('.course-institution').textContent;
-                const date = item.querySelector('.course-date').textContent;
-                courses.push({ name, inst, date });
+            document.querySelectorAll('.course-item').forEach(item => {
+                try {
+                    const nameEl = item.querySelector('.course-name');
+                    const instEl = item.querySelector('.course-institution');
+                    const dateEl = item.querySelector('.course-date');
+                    const name = nameEl ? nameEl.textContent.trim() : '';
+                    const inst = instEl ? instEl.textContent.trim() : '';
+                    const date = dateEl ? dateEl.textContent.trim() : '';
+                    if (name && inst) {
+                        courses.push({ name, inst, date });
+                    }
+                } catch(e) {
+                    console.log('Error parsing course item', e);
+                }
             });
 
             // Build PDF HTML
